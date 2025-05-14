@@ -1,0 +1,42 @@
+import os
+import shutil
+
+# Set the directory to organize
+SOURCE_DIR = os.path.expanduser("~/Downloads")
+
+# Define file type categories
+FILE_TYPES = {
+    "Images": [".jpg", ".jpeg", ".png", ".gif", ".bmp"],
+    "Documents": [".pdf", ".docx", ".txt", ".xlsx", ".pptx"],
+    "Videos": [".mp4", ".mkv", ".avi", ".mov"],
+    "Music": [".mp3", ".wav", ".aac"],
+    "Archives": [".zip", ".rar", ".tar", ".gz"],
+    "Scripts": [".py", ".js", ".sh", ".bat"]
+}
+
+def get_category(filename):
+    ext = os.path.splitext(filename)[1].lower()
+    for category, extensions in FILE_TYPES.items():
+        if ext in extensions:
+            return category
+    return "Others"
+
+def organize_files(directory):
+    for filename in os.listdir(directory):
+        src_path = os.path.join(directory, filename)
+
+        if os.path.isfile(src_path):
+            category = get_category(filename)
+            dest_dir = os.path.join(directory, category)
+
+            if not os.path.exists(dest_dir):
+                os.makedirs(dest_dir)
+
+            dest_path = os.path.join(dest_dir, filename)
+            shutil.move(src_path, dest_path)
+            print(f"Moved {filename} → {category}/")
+
+if __name__ == "__main__":
+    organize_files(SOURCE_DIR)
+    print("✅ File organization complete.")
+
